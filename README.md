@@ -2,7 +2,24 @@
 
 En este taller de introducción a `git` y GitHub aprenderemos los comandos básicos para empezar a trabajar con repositorios de forma local y remota.
 
-## Instalación y configuración
+1. `git`  
+  1.1 Instalación y configuración de `git`  
+  1.2 Estados de un archivo en `git`  
+  1.3 Trabajando con un repositorio local  
+  1.4 Trabajando con un repositorio remoto  
+  1.5 Deshaciendo cambios  
+  1.6 El archivo `.gitignore`  
+  1.7 Consultar el historial de *commits*  
+  1.8 Branches  
+  1.9 Problemas Comunes  
+2. GitHub  
+  2.1 Creación de un nuevo usuario  
+  2.2 Configuración de GitHub  
+  2.3 Cómo trabajar en equipo con GitHub
+
+# `git`
+
+## Instalación y configuración de `git`
 
 ### Instalación de `git`
 
@@ -17,7 +34,7 @@ sudo apt-get install git
 
 Descargar desde la web oficial: http://git-scm.com/downloads.
 
-### Configuración de Git
+### Configuración de `git`
 
 Configuramos el nombre y el email que aparecerán en los *commits* que hagamos sobre los repositorios.
 
@@ -35,11 +52,50 @@ Para comprobar si se han aplicado los cambios podemos ejecutar el siguiente coma
 git config --list
 ```
 
-## ¿Cómo funciona `git`?
+## Secciones principales de un repositorio `git`
+
+En un repositorio `git` podemos diferenciar las siguientes secciones:
+
+* *Working directory*
+* *Staging area (Index)*
+* *Local repository*
+* *Remote repository*
 
 ![](images/img-00.png)
 
 Figura 1: Imagen de [Oliver Steele](http://osteele.com).
+
+## Estados de un archivo en `git`
+
+Un archivo puede estar en alguno de los siguientes estados:
+
+* Sin seguimiento (*untracked*)
+* Preparado (*staged*)
+* Modificado (*modified*)
+* Confirmado (*commited*)
+
+```
++-----------+  +-------+  +----------------+
+| Workspace |  | Index |  |Local repository|
++-----+-----+  +---+---+  +-------+--------+
+      |            |              |
+      |            |              |
+  Untracked        |              |
+      |            |              |
+  Modified      Staged        Commited
+      |            |              |
+      |            |              |
+      |            |              |
+      +            +              +
+```
+
+Para consultar el estado de los archivos usamos el comando:
+
+```
+git status
+```
+
+**Este comando es muy usado** ya que es fundamental conocer el estado de los archivos de nuestro repositorio,
 
 ## Trabajando con un repositorio local
 
@@ -83,6 +139,16 @@ git commit --amend
 
 ```
 git diff
+```
+
+### Borrando y moviendo archivos
+
+```
+git rm <archivo>
+```
+
+```
+git mv <archivo>
 ```
 
 ## Trabajando con un repositorio remoto
@@ -148,13 +214,13 @@ git log --graph
 
 (TODO)
 
-## GitHub
+# GitHub
 
-### Crear un nuevo usuario
+## Crear un nuevo usuario
 
 (TODO)
 
-### Configuración de GitHub
+## Configuración de GitHub
 
 (TODO)
 
