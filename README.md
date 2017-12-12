@@ -21,12 +21,18 @@ Descargar desde la web oficial: http://git-scm.com/downloads.
 
 Configuramos el nombre y el email que aparecerán en los *commits* que hagamos sobre los repositorios.
 
-```git
+```
 git config --global user.name "Nombre"
 ```
 
-```git
+```
 git config --global user.email "correo@electronico.com"
+```
+
+Para comprobar si se han aplicado los cambios podemos ejecutar el siguiente comando para mostrar cuál es la configuración actual de `git`:
+
+```
+git config --list
 ```
 
 ## ¿Cómo funciona `git`?
@@ -41,7 +47,7 @@ Figura 1: Imagen de [Oliver Steele](http://osteele.com).
 
 Un repositorio Git es un directorio oculto llamado `.git` que se guarda en el directorio raíz de nuestro proyecto. El directorio `.git` almacena el historial de todos los cambios que se han realizado.
 
-```git
+```
 git init
 ```
 
@@ -141,6 +147,24 @@ git log --graph
 ## Problemas comunes
 
 (TODO)
+
+## GitHub
+
+### Crear un nuevo usuario
+
+(TODO)
+
+### Configuración de GitHub
+
+(TODO)
+
+## Cómo trabajar en equipo con GitHub
+
+(TODO)
+
+## Tips
+
+* [Recordar la contraseña](https://gist.github.com/ankurk91/f0b26f1c30d0d6d3ca4e).
 
 ## Referencias
 
