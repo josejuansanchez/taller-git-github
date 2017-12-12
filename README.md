@@ -1,6 +1,6 @@
 # Taller de introducción a `git` y GitHub
 
-En este taller de introducción a `git' y GitHub aprenderemos los comandos básicos para empezar a trabajar con repositorios de forma local y remota.
+En este taller de introducción a `git` y GitHub aprenderemos los comandos básicos para empezar a trabajar con repositorios de forma local y remota.
 
 ## Instalación y configuración
 
@@ -143,6 +143,7 @@ git log --graph
 ## Referencias
 
 * https://git-scm.com/book/es/v2
+* https://github.com/oslugr/curso-git
 * https://guides.github.com
 
 # Créditos
