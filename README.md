@@ -1,6 +1,6 @@
 # Taller de introducción a `git` y GitHub
 
-En este taller de introducción a `git` y GitHub aprenderemos los comandos básicos para empezar a trabajar con repositorios de forma local y remota.
+En este taller de introducción a `git` y [GitHub][1] aprenderemos los comandos básicos para empezar a trabajar con repositorios de forma local y remota.
 
 1. `git`  
   1.1 Instalación y configuración de `git`  
@@ -56,7 +56,7 @@ git config --list
 
 En un repositorio `git` podemos diferenciar las siguientes secciones:
 
-* *Working directory*
+* *Workspace*
 * *Staging area (Index)*
 * *Local repository*
 * *Remote repository*
@@ -77,18 +77,20 @@ Un archivo puede estar en alguno de los siguientes estados:
 El siguiente diagrama muestra en qué sección se puede encontrar cada archivo en función de su estado.
 
 ```
-+-----------+  +-------+  +----------------+
-| Workspace |  | Index |  |Local repository|
-+-----+-----+  +---+---+  +-------+--------+
-      |            |              |
-      |            |              |
-  Untracked        |              |
-      |            |              |
-  Modified      Staged        Commited
-      |            |              |
-      |            |              |
-      |            |              |
-      +            +              +
++-------------+  +-------------+  +-------------+
+|  Workspace  |  |   Staging   |  |    Local    |
+|             |  |     Area    |  |  Repository |
++------+------+  +------+------+  +------+------+
+       |                |                |
+       |                |                |
+   Untracked            |                |
+       |                |                |
+   Modified          Staged          Commited
+       |                |                |
+       |                |                |
+       |                |                |
+       +                +                +
+
 ```
 
 Para consultar el estado de los archivos usamos el comando:
@@ -99,7 +101,7 @@ git status
 
 **Este comando es muy usado** ya que es fundamental conocer el estado de los archivos de nuestro repositorio.
 
-## Trabajando con un repositorio local
+## Cómo trabajar con un repositorio local
 
 ### Creación de un repositorio local
 
@@ -150,11 +152,15 @@ Si examinamos el contenido del directorio `.git` veremos el siguiente árbol de 
 
 ### Comandos básicos para trabajar con un repositorio local
 
+**Paso 1**
+
 En primer lugar comprobaremos en qué estado se encuentran los archivos del repositorio:
 
 ```
 git status
 ```
+
+**Paso 2**
 
 Si tenemos archivos en estado ***untracked*** o ***modified*** los añadimos a la ***staging area*** con el siguiente comando:
 
@@ -168,18 +174,128 @@ El comando anterior nos permite seleccionar cuáles son los archivos que queremo
 git add -A
 ```
 
+**Paso 3**
+
 Una vez que tenemos los archivos en la ***staging area*** tenemos que hacer un ***commit*** para moverlos al repositorio:
 
 ```
 git commit -m "Breve comentario con los cambios realizados"
 ```
 
+## Cómo deshacer cambios
+
+### Modificar el texto del último *commit*
 
 ```
 git commit --amend
 ```
 
-### Borrando y moviendo archivos
+### Añadir archivos al último *commit*
+
+```
+git commit --amend
+```
+
+**Ejemplo:**
+
+Suponemos que acabamos de hacer un *commit* en el repositorio pero nos hemos olvidado de añadir un archivo que queremos incluir en ese *commit*. En estos casos podemos utilizar el comando `git commit --amend` para añadir nuevos archivos al último *commit* realizado sobre el repositorio.
+
+A continuación se muestra una posible secuencia de comandos simlando la situación que acabamos de describir.
+
+```
+git add archivo.txt
+git commit -m "Añadimos el archivo.txt"
+git add archivo_olvidado.txt
+git commit --amend
+```
+
+### Mover un archivo del *staging area* al *workspace*
+
+```
+git reset HEAD <archivo>
+```
+
+**Ejemplo:**
+
+Suponemos que hemos añadido un archivo llamado `archivo.txt` al *staging area* pero queremos volver a llevarlo al *workspace* para realizar una nueva modificación antes de hacer un *commit* en el repositorio.
+
+El escenario descrito sería el siguiente:
+
+```
++-------------+  +-------------+  +-------------+
+|  Workspace  |  |   Staging   |  |    Local    |
+|             |  |     Area    |  |  Repository |
++------+------+  +------+------+  +------+------+
+       |                |                |
+       |                |                |
+       |                |                |
+       |                |                |
+       |            archivo.txt          |
+       |                |                |
+       |                |                |
+       |                |                |
+       +                +                +
+```
+
+Para mover el archivo `archivo.txt` al *workspace* ejecutamos:
+
+```
+git reset HEAD archivo.txt
+```
+
+Después del comando anterior el repositorio quedaría así:
+
+```
++-------------+  +-------------+  +-------------+
+|  Workspace  |  |   Staging   |  |    Local    |
+|             |  |     Area    |  |  Repository |
++------+------+  +------+------+  +------+------+
+       |                |                |
+       |                |                |
+       |                |                |
+       |                |                |
+   archivo.txt          |                |
+   (Modified)           |                |
+       |                |                |
+       |                |                |
+       +                +                +
+```
+
+### Deshacer cambios en el *workspace*
+
+```
+git ckeckout -- <archivo>
+```
+
+**Ejemplo:**
+
+Suponemos que hemos realizado algunos cambios sobre un  archivo llamado `archivo.txt` pero queremos deshacerlos y que el archivo vuelva a tener el contenido con el que se guardó en el útimo *commit* en el repositorio.
+
+El escenario descrito sería el siguiente:
+
+```
++-------------+  +-------------+  +-------------+
+|  Workspace  |  |   Staging   |  |    Local    |
+|             |  |     Area    |  |  Repository |
++------+------+  +------+------+  +------+------+
+       |                |                |
+       |                |                |
+       |                |                |
+       |                |                |
+   archivo.txt          |                |
+   (Modified)           |                |
+       |                |                |
+       |                |                |
+       +                +                +
+```
+
+Para deshacer los cambios realizados en `archivo.txt` y volver a su estado anterior sería necesario ejecutar:
+
+```
+git ckeckout -- archivo.txt
+```
+
+## Borrando y moviendo archivos
 
 ```
 git rm <archivo>
@@ -189,13 +305,59 @@ git rm <archivo>
 git mv <archivo>
 ```
 
-## Trabajando con un repositorio remoto
+## Cómo trabajar con un repositorio remoto
+
+Existen dos opciones para empezar a trabajar con un repositorio remoto. 
+
+* Cuando ya tenemos creado un repositorio local y queremos **añadir** un repositorio remoto para sincronizarnos.
+* Cuando no partimos de ningún repositorio local y lo que queremos hacer es **clonar** el repositorio remoto en nuestra máquina.
+
+### Añadir un repositorio remoto a un repositorio ya existente
+
+```
+git remote add <alias> <url_del_repositorio_remoto>
+```
+
+**Ejemplo:**
+
+Suponemos que ya tenemos creado un repositorio local y queremos añadir el repositorio remoto del taller de git. En este caso hemos usado `taller-git` como alias. Este sería el comando que tendríamos que ejecutar:
+
+```
+git remote add taller-git https://github.com/josejuansanchez/taller-git-github.git
+```
+
+Para comprobar si el repositorio remoto se ha añadido correctamente ejecutamos:
+
+```
+git remote -v
+```
+
+El comando anterior nos devolverá estas dos líneas:
+
+```
+taller-git	https://github.com/josejuansanchez/taller-git-github.git (fetch)
+taller-git	https://github.com/josejuansanchez/taller-git-github.git (push)
+```
+
+La primera línea acabada con la palabra *(fectch)* indica que esa es la url del repositorio remoto desde el que podemos recibir cambios.
+
+La segunda línea acabada con la palabra *(push)* indica que esa es la url del repositorio remoto donde podemos enviar nuestros cambios.
+
+(TODO: Explicar cómo hacer fetch y push de un repositorio remoto.)
 
 ### Clonar un repositorio remoto
 
 ```
+git clone <url_del_repositorio_remoto>
+```
+
+**Ejemplo:**
+
+```
 git clone https://github.com/josejuansanchez/taller-git-github.git
 ```
+
+Al clonar este repositorio se nos creará un direcorio en nuestra máquina con el nombre `taller-git-github` con el contenido del repositorio remoto.
 
 ### Comandos básicos para trabajar con un repositorio remoto
 
@@ -209,15 +371,23 @@ git push
 git pull
 ```
 
-## Deshaciendo cambios
+```
++-------------+  +-------------+  +-------------+  +-------------+
+|  Workspace  |  |   Staging   |  |    Local    |  |    Remote   |
+|             |  |     Area    |  |  Repository |  |  Repository |
++------+------+  +------+------+  +------+------+  +------+------+
+       |                |                |                |
+       |                |                |                |
+       |                |                |                |
+       |                |                |                |
+       |                |                |                |
+       |                |                |                |
+       |                |                |                |
+       |                |                |                |
+       +                +                +                +
 
 ```
-git reset HEAD <archivo>
-```
 
-```
-git ckeckout -- <archivo>
-```
 
 ## El archivo `.gitignore`
 
@@ -254,6 +424,9 @@ git log --graph
 
 # GitHub
 
+[Revisar el capítulo 6 del libro Git Book](https://git-scm.com/book/es/v2/GitHub-Creaci%C3%B3n-y-configuraci%C3%B3n-de-la-cuenta).
+
+
 ## Crear un nuevo usuario
 
 (TODO)
@@ -263,6 +436,14 @@ git log --graph
 (TODO)
 
 ## Cómo trabajar en equipo con GitHub
+
+(TODO)
+
+## *Pull Requests* en GitHub
+
+(TODO)
+
+## *Issues* en GitHub
 
 (TODO)
 
@@ -283,3 +464,5 @@ git log --graph
 ## Licencia
 
 <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Licencia de Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />Esta obra está bajo una <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">licencia de Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional</a>.
+
+[1]: https://github.com
