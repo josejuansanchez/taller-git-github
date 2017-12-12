@@ -31,7 +31,9 @@ git config --global user.email "correo@electronico.com"
 
 ## ¿Cómo funciona `git`?
 
-![](https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Git_data_flow_simplified.svg/360px-Git_data_flow_simplified.svg.png)
+![](images/img-00.png)
+
+Figura 1: Imagen de [Oliver Steele](http://osteele.com).
 
 ## Trabajando con un repositorio local
 
@@ -148,7 +150,7 @@ git log --graph
 
 # Créditos
 
-* Imagen de [Cmglee](https://commons.wikimedia.org/wiki/User:Cmglee), [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0) or [GFDL](http://www.gnu.org/copyleft/fdl.html), via Wikimedia Commons.
+* La *Figura 1* es una imagen diseñada por [Oliver Steele](http://osteele.com).
 
 ## Licencia
 
