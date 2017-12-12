@@ -74,6 +74,8 @@ Un archivo puede estar en alguno de los siguientes estados:
 * Modificado (*modified*)
 * Confirmado (*commited*)
 
+El siguiente diagrama muestra en qué sección se puede encontrar cada archivo en función de su estado.
+
 ```
 +-----------+  +-------+  +----------------+
 | Workspace |  | Index |  |Local repository|
@@ -95,13 +97,15 @@ Para consultar el estado de los archivos usamos el comando:
 git status
 ```
 
-**Este comando es muy usado** ya que es fundamental conocer el estado de los archivos de nuestro repositorio,
+**Este comando es muy usado** ya que es fundamental conocer el estado de los archivos de nuestro repositorio.
 
 ## Trabajando con un repositorio local
 
 ### Creación de un repositorio local
 
 Un repositorio Git es un directorio oculto llamado `.git` que se guarda en el directorio raíz de nuestro proyecto. El directorio `.git` almacena el historial de todos los cambios que se han realizado.
+
+El comando para crear un repositorio `git` es el siguiente:
 
 ```
 git init
@@ -115,30 +119,64 @@ cd taller-git
 git init
 ```
 
+Si examinamos el contenido del directorio `.git` veremos el siguiente árbol de contenidos:
+
+```
+.
+└── .git
+    ├── HEAD
+    ├── config
+    ├── description
+    ├── hooks
+    │   ├── applypatch-msg.sample
+    │   ├── commit-msg.sample
+    │   ├── post-update.sample
+    │   ├── pre-applypatch.sample
+    │   ├── pre-commit.sample
+    │   ├── pre-push.sample
+    │   ├── pre-rebase.sample
+    │   ├── pre-receive.sample
+    │   ├── prepare-commit-msg.sample
+    │   └── update.sample
+    ├── info
+    │   └── exclude
+    ├── objects
+    │   ├── info
+    │   └── pack
+    └── refs
+        ├── heads
+        └── tags
+```
+
 ### Comandos básicos para trabajar con un repositorio local
+
+En primer lugar comprobaremos en qué estado se encuentran los archivos del repositorio:
 
 ```
 git status
 ```
 
+Si tenemos archivos en estado ***untracked*** o ***modified*** los añadimos a la ***staging area*** con el siguiente comando:
+
 ```
-git add <archivo>
+git add <nombre_archivo>
 ```
+
+El comando anterior nos permite seleccionar cuáles son los archivos que queremos mover a la ***staging area***. Si tenemos varios archivos que queremos mover a la ***staging area*** no es necesario hacerlo uno a uno, podemos usar el siguiente comando para moverlos todos a la vez:
 
 ```
 git add -A
 ```
 
+Una vez que tenemos los archivos en la ***staging area*** tenemos que hacer un ***commit*** para moverlos al repositorio:
+
 ```
 git commit -m "Breve comentario con los cambios realizados"
 ```
 
-```
-git commit --amend
-```
 
 ```
-git diff
+git commit --amend
 ```
 
 ### Borrando y moviendo archivos
