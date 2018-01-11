@@ -416,12 +416,28 @@ git commit -m "Se renombra archivo.txt por nuevo_nombre.txt"
 
 ## Cómo trabajar con un repositorio remoto
 
-Existen dos opciones para empezar a trabajar con un repositorio remoto. 
+Existen dos opciones para empezar a trabajar con un repositorio remoto.
 
-* Cuando ya tenemos creado un repositorio local y queremos **añadir** un repositorio remoto para sincronizarnos.
-* Cuando no partimos de ningún repositorio local y lo que queremos hacer es **clonar** el repositorio remoto en nuestra máquina.
+1. Cuando no partimos de ningún repositorio local y lo que queremos hacer es **clonar** el repositorio remoto en nuestra máquina.
+2. Cuando ya tenemos creado un repositorio local y queremos **añadir** un repositorio remoto para sincronizarnos.
 
-### Añadir un repositorio remoto a un repositorio ya existente
+### Opción 1: Clonar un repositorio remoto
+
+```
+git clone <url_del_repositorio_remoto>
+```
+
+**Ejemplo:**
+
+```
+git clone https://github.com/josejuansanchez/taller-git-github.git
+```
+
+Al clonar este repositorio se nos creará un directorio en nuestra máquina con el nombre `taller-git-github` con el contenido del repositorio remoto.
+
+Esta es la opción que yo personalmente suelo utilizar a la hora de trabajar con repositorios remotos. En primer lugar creo el repositorio remoto en `GitHub` y luego hago un `git clone` para clonarlo en mi máquina local.
+
+### Opción 2: Añadir un repositorio remoto a un repositorio ya existente
 
 ```
 git remote add <alias> <url_del_repositorio_remoto>
@@ -452,33 +468,19 @@ La primera línea acabada con la palabra *(fectch)* indica que esa es la url del
 
 La segunda línea acabada con la palabra *(push)* indica que esa es la url del repositorio remoto donde podemos enviar nuestros cambios.
 
-(TODO: Explicar cómo hacer fetch y push de un repositorio remoto.)
-
-### Clonar un repositorio remoto
-
-```
-git clone <url_del_repositorio_remoto>
-```
-
-**Ejemplo:**
-
-```
-git clone https://github.com/josejuansanchez/taller-git-github.git
-```
-
-Al clonar este repositorio se nos creará un directorio en nuestra máquina con el nombre `taller-git-github` con el contenido del repositorio remoto.
+> **Nota**: Queda pendiente explicar cómo hacer `fetch` y `push` de un repositorio remoto. Esto se verá más adelante en alguna sección.
 
 ### Comandos básicos para trabajar con un repositorio remoto
 
-Utilizaremos los mismos comandos que usamos para trabajar con un repositorio local y los siguientes:
+Utilizaremos los mismos comandos que usamos para trabajar con un repositorio local y además añadiremos `git push` y `git pull`.
+
+#### Enviamos los cambios con `push`
 
 ```
 git push
 ```
 
-```
-git pull
-```
+Usamos este comando para enviar al repositorio remoto los *commits* que hemos hecho en nuestro repositorio local. La forma más habitual de usarlo es hacerlo después de cada `commit`.
 
 ```
 +-------------+  +-------------+  +-------------+  +-------------+
@@ -486,8 +488,8 @@ git pull
 |             |  |     Area    |  |  Repository |  |  Repository |
 +------+------+  +------+------+  +------+------+  +------+------+
        |                |                |                |
-       |                |                |                |
-       |                |                |                |
+       |                |                |   git push     |
+       |                |                | -------------> |
        |                |                |                |
        |                |                |                |
        |                |                |                |
@@ -497,6 +499,40 @@ git pull
 
 ```
 
+**Ejemplo:**
+
+```
+git add archivo.txt
+git commit -m "Actualizamos el archivo.txt"
+git push
+```
+
+#### Recibimos los cambios con `pull`
+
+```
+git pull
+```
+
+Usamos este comando para recibir los nuevos *commits* que existen en el repositorio remoto y aún no tenemos en nuestro repositorio local. Además de recibir los nuevos cambios, los fusiona con el contenido de nuestro repositorio local, actualizando de este modo los archivos que tengamos en la sección `Local Repository` y `Workspace`. Esto quiere decir que si teníamos un archivo con estado `Modified` en la sección `Workspace` se perderían todos los cambios.
+
+Tenga en cuenta que `git pull` es equivalente a realizar `git fetch` seguido de `git merge`.
+
+```
++-------------+  +-------------+  +-------------+  +-------------+
+|  Workspace  |  |   Staging   |  |    Local    |  |    Remote   |
+|             |  |     Area    |  |  Repository |  |  Repository |
++------+------+  +------+------+  +------+------+  +------+------+
+       |                |                |                |
+       |                |                |    git pull    |
+       |                |                | <------------- |
+       |                |                |                |
+       | <----------------------------------------------- |
+       |                |                |                |
+       |                |                |                |
+       |                |                |                |
+       +                +                +                +
+
+```
 
 ## El archivo `.gitignore`
 
@@ -511,13 +547,19 @@ Por ejemplo, si en nuestro repositorio no queremos guardar archivos `*.class` y 
 
 ## Consultar el historial de *commits*
 
+Para consultar el historial de *commits* podemos usar el comando `git log`. Este comando muestra información bastante completa de cada uno de los *commits* que se han realizado en el repositorio. Para cada *commit* podemos consultar cuál es la suma de comprobación SHA-1, el nombre, la dirección de correo del autor, la fecha/hora y el mensaje de confirmación del autor.
+
 ```
 git log
 ```
 
+La opción `--oneline` nos muestra menos información del historial, mostrando una única línea por *commit*.
+
 ```
 git log --oneline
 ```
+
+La opción `--graph` muestra el historial de *branches* y *merges* con un sencillo gráfico ASCII.
 
 ```
 git log --graph
@@ -525,36 +567,37 @@ git log --graph
 
 ## Branches
 
-(TODO)
+Se recomienda leer el [capítulo 3: Ramificaciones en Git][2] del libro [Pro Git][3] de Scott Chacon y Ben Straub.
 
-## Problemas comunes
+## Cómo trabajar en equipo con `git`
 
-(TODO)
+![](images/img-01.png)
+
+Figura 2: Imagen extraída del blog de [James Chambers](http://jameschambers.co/writing/git-team-workflow-cheatsheet/).
+
+Se recomienda leer el *post* [Using Git in a team: a cheatsheet](http://jameschambers.co/writing/git-team-workflow-cheatsheet/).
 
 # GitHub
 
-[Revisar el capítulo 6 del libro Git Book](https://git-scm.com/book/es/v2/GitHub-Creaci%C3%B3n-y-configuraci%C3%B3n-de-la-cuenta).
+Se recomienda leer el [capítulo 6: GitHub][4], del libro [Pro Git][3] de Scott Chacon y Ben Straub.
 
-
+<!--
 ## Crear un nuevo usuario
 
-(TODO)
+(*Próximamente*)
 
 ## Configuración de GitHub
 
-(TODO)
-
-## Cómo trabajar en equipo con GitHub
-
-(TODO)
+(*Próximamente*)
 
 ## *Pull Requests* en GitHub
 
-(TODO)
+(*Próximamente*)
 
 ## *Issues* en GitHub
 
-(TODO)
+(*Próximamente*)
+-->
 
 ## Tips
 
@@ -569,9 +612,13 @@ git log --graph
 # Créditos
 
 * La *Figura 1* es una imagen diseñada por [Oliver Steele](http://osteele.com).
+* La *Figura 2* es una imagen extraída del blog de [James Chambers](http://jameschambers.co/writing/git-team-workflow-cheatsheet/).
 
 ## Licencia
 
 <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Licencia de Creative Commons" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />Esta obra está bajo una <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">licencia de Creative Commons Reconocimiento-CompartirIgual 4.0 Internacional</a>.
 
 [1]: https://github.com
+[2]: https://git-scm.com/book/es/v2/Ramificaciones-en-Git-%C2%BFQu%C3%A9-es-una-rama%3F
+[3]: https://git-scm.com/book/es/v2
+[4]: https://git-scm.com/book/es/v2/GitHub-Creaci%C3%B3n-y-configuraci%C3%B3n-de-la-cuenta
