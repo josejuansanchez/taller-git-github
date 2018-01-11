@@ -94,7 +94,6 @@ El siguiente diagrama muestra en qué sección se puede encontrar cada archivo e
        |                |                |
        |                |                |
        +                +                +
-
 ```
 
 Para consultar el estado de los archivos usamos el comando:
@@ -191,7 +190,7 @@ git commit -m "Breve comentario con los cambios realizados"
 ### Modificar el texto del último *commit*
 
 ```
-git commit --amend
+git commit -m "Modifico el texto del último commit" --amend
 ```
 
 ### Añadir archivos al último *commit*
@@ -204,7 +203,7 @@ git commit --amend
 
 Suponemos que acabamos de hacer un *commit* en el repositorio pero nos hemos olvidado de añadir un archivo que queremos incluir en ese *commit*. En estos casos podemos utilizar el comando `git commit --amend` para añadir nuevos archivos al último *commit* realizado sobre el repositorio.
 
-A continuación se muestra una posible secuencia de comandos simlando la situación que acabamos de describir.
+A continuación se muestra una posible secuencia de comandos simulando la situación que acabamos de describir.
 
 ```
 git add archivo.txt
@@ -273,7 +272,7 @@ git ckeckout -- <archivo>
 
 **Ejemplo:**
 
-Suponemos que hemos realizado algunos cambios sobre un  archivo llamado `archivo.txt` pero queremos deshacerlos y que el archivo vuelva a tener el contenido con el que se guardó en el útimo *commit* en el repositorio.
+Suponemos que hemos realizado algunos cambios sobre un  archivo llamado `archivo.txt` pero queremos deshacerlos y que el archivo vuelva a tener el contenido con el que se guardó en el último *commit* en el repositorio.
 
 El escenario descrito sería el siguiente:
 
@@ -299,14 +298,120 @@ Para deshacer los cambios realizados en `archivo.txt` y volver a su estado anter
 git ckeckout -- archivo.txt
 ```
 
-## Borrando y moviendo archivos
+## Borrando y moviendo/renombrando archivos
+
+### Borrar un archivo
+
+Para borrar un archivo que ya se encuentra bajo el control de versiones de `git` es necesario utilizar el siguiente comando:
 
 ```
 git rm <archivo>
 ```
 
+Vamos a ver los cuatro casos que podemos encontrarnos a la hora de borrar un archivo.
+
+1. Queremos eliminar un archivo que todavía **no ha sido incluido en el repositorio** y se encuentra en la sección `Workspace` con el estado `Untracked`. En este caso no es necesario utilizar ningún comando específico de `git`, lo borraríamos con el comando `rm`.
+
 ```
-git mv <archivo>
++-------------+  +-------------+  +-------------+
+|  Workspace  |  |   Staging   |  |    Local    |
+|             |  |     Area    |  |  Repository |
++------+------+  +------+------+  +------+------+
+       |                |                |
+       |                |                |
+       |                |                |
+   archivo.txt          |                |
+   (Untracked)          |                |
+       |                |                |
+       |                |                |
+       |                |                |
+       +                +                +
+```
+
+**Ejemplo:**
+
+```
+rm archivo.txt
+```
+
+2. Queremos eliminar un archivo que **ya está incluido en el repositorio** y se encuentra en la sección `Workspace` con el estado `Modified`.
+
+```
++-------------+  +-------------+  +-------------+
+|  Workspace  |  |   Staging   |  |    Local    |
+|             |  |     Area    |  |  Repository |
++------+------+  +------+------+  +------+------+
+       |                |                |
+       |                |                |
+       |                |                |
+   archivo.txt          |                |
+   (Modified)           |                |
+       |                |                |
+       |                |                |
+       |                |                |
+       +                +                +
+```
+
+3. Queremos eliminar un archivo que **ya está incluido en el repositorio** y se encuentra en la sección `Staging Area` con el estado `Staged`.
+
+```
++-------------+  +-------------+  +-------------+
+|  Workspace  |  |   Staging   |  |    Local    |
+|             |  |     Area    |  |  Repository |
++------+------+  +------+------+  +------+------+
+       |                |                |
+       |                |                |
+       |                |                |
+       |            archivo.txt          |
+       |             (Staged)            |
+       |                |                |
+       |                |                |
+       |                |                |
+       +                +                +
+```
+
+4. Queremos eliminar un archivo que **ya está incluido en el repositorio** y se encuentra en la sección `Local Repository` con el estado `Commited`.
+
+```
++-------------+  +-------------+  +-------------+
+|  Workspace  |  |   Staging   |  |    Local    |
+|             |  |     Area    |  |  Repository |
++------+------+  +------+------+  +------+------+
+       |                |                |
+       |                |                |
+       |                |                |
+       |                |            archivo.txt
+       |                |            (Commited)
+       |                |                |
+       |                |                |
+       |                |                |
+       +                +                +
+```
+
+En los tres últimos casos el archivo que queremos eliminar ya se encuentra bajo el sistema de control de `git`, por este motivo hay que utilizar el comando `git rm` y después habría que hacer un `git commit` para guardar los cambios en el repositorio.
+
+**Ejemplo:**
+
+```
+git rm archivo.txt
+git commit -m "Se elimina archivo.txt"
+```
+
+### Mover/Renombrar archivos
+
+Para mover a otro directorio o renombrar un archivo que ya se encuentra bajo el control de versiones de `git` es necesario utilizar el siguiente comando:
+
+```
+git mv <archivo> <nuevo_nombre>
+```
+
+A la hora de mover/renombrar archivos nos podemos encontrar los mismos casos que hemos comentado en la sección anterior. Por lo tanto, para mover o renombrar un archivo que todavía **no ha sido incluido en el repositorio** y se encuentra en la sección `Workspace` con el estado `Untracked` no es necesario utilizar ningún comando específico de `git`, lo haríamos con el comando `mv`. Para el resto de casos donde el archivo ya se encuentra bajo el sistema de control de `git`, usaremos el comando `git mv` y después habría que hacer un `git commit` para guardar los cambios en el repositorio.
+
+**Ejemplo:**
+
+```
+git mv archivo.txt nuevo_nombre.txt
+git commit -m "Se renombra archivo.txt por nuevo_nombre.txt"
 ```
 
 ## Cómo trabajar con un repositorio remoto
@@ -361,7 +466,7 @@ git clone <url_del_repositorio_remoto>
 git clone https://github.com/josejuansanchez/taller-git-github.git
 ```
 
-Al clonar este repositorio se nos creará un direcorio en nuestra máquina con el nombre `taller-git-github` con el contenido del repositorio remoto.
+Al clonar este repositorio se nos creará un directorio en nuestra máquina con el nombre `taller-git-github` con el contenido del repositorio remoto.
 
 ### Comandos básicos para trabajar con un repositorio remoto
 
