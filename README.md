@@ -8,18 +8,17 @@ En este taller de introducción a `git` y [GitHub][1] aprenderemos los comandos 
   1.3 [Estados de un archivo en `git`](#estados-de-un-archivo-en-git)  
   1.4 [Cómo trabajar con un repositorio local](#cómo-trabajar-con-un-repositorio-local)  
   1.5 [Cómo deshacer cambios](#cómo-deshacer-cambios)  
-  1.6 [Borrando y moviendo archivos](#borrando-y-moviendo-archivos)  
+  1.6 [Borrando y moviendo/renombrando archivos](#borrando-y-moviendorenombrando-archivos)  
   1.7 [Cómo trabajar con un repositorio remoto](#cómo-trabajar-con-un-repositorio-remoto)  
-  1.8 [El archivo `.gitignore`](#el-archivo-gitignore)  
-  1.9 [Consultar el historial de *commits*](#consultar-el-historial-de-commits)  
-  1.10 [Branches](#branches)  
-  1.11 [Problemas Comunes](#problemas-comunes)  
+  1.8 [Branches](#branches)  
+  1.9 [Cómo trabajar en equipo con `git`](#cómo-trabajar-en-equipo-con-git)  
+  1.10 [El archivo `.gitignore`](#el-archivo-gitignore)  
+  1.11 [Consultar el historial de *commits*](#consultar-el-historial-de-commits)  
 2. [GitHub](#github)  
   2.1 [Creación de un nuevo usuario](#crear-un-nuevo-usuario)  
   2.2 [Configuración de GitHub](#configuración-de-github)  
-  2.3 [Cómo trabajar en equipo con GitHub](#cómo-trabajar-en-equipo-con-github)  
-  2.4 [*Pull Requests* en GitHub](#pull-requests-en-github)  
-  2.5 [*Issues* en GitHub](#issues-en-github)  
+  2.3 [*Pull Requests* en GitHub](#pull-requests-en-github)  
+  2.4 [*Issues* en GitHub](#issues-en-github)  
 
 # `git`
 
@@ -468,8 +467,6 @@ La primera línea acabada con la palabra *(fectch)* indica que esa es la url del
 
 La segunda línea acabada con la palabra *(push)* indica que esa es la url del repositorio remoto donde podemos enviar nuestros cambios.
 
-> **Nota**: Queda pendiente explicar cómo hacer `fetch` y `push` de un repositorio remoto. Esto se verá más adelante en alguna sección.
-
 ### Comandos básicos para trabajar con un repositorio remoto
 
 Utilizaremos los mismos comandos que usamos para trabajar con un repositorio local y además añadiremos `git push` y `git pull`.
@@ -534,6 +531,18 @@ Tenga en cuenta que `git pull` es equivalente a realizar `git fetch` seguido de 
 
 ```
 
+## Branches
+
+Se recomienda leer el [capítulo 3: Ramificaciones en Git][2] del libro [Pro Git][3] de Scott Chacon y Ben Straub.
+
+## Cómo trabajar en equipo con `git`
+
+![](images/img-01.png)
+
+Figura 2: Imagen extraída del blog de [James Chambers](http://jameschambers.co/writing/git-team-workflow-cheatsheet/).
+
+Se recomienda leer el *post* [Using Git in a team: a cheatsheet](http://jameschambers.co/writing/git-team-workflow-cheatsheet/).
+
 ## El archivo `.gitignore`
 
 Dentro del directorio raíz de nuestro proyecto podemos tener un archivo especial llamado `.gitignore` donde indicamos los archivos o tipos de archivos que queremos que sean ignorados por `git`. 
@@ -564,18 +573,6 @@ La opción `--graph` muestra el historial de *branches* y *merges* con un sencil
 ```
 git log --graph
 ```
-
-## Branches
-
-Se recomienda leer el [capítulo 3: Ramificaciones en Git][2] del libro [Pro Git][3] de Scott Chacon y Ben Straub.
-
-## Cómo trabajar en equipo con `git`
-
-![](images/img-01.png)
-
-Figura 2: Imagen extraída del blog de [James Chambers](http://jameschambers.co/writing/git-team-workflow-cheatsheet/).
-
-Se recomienda leer el *post* [Using Git in a team: a cheatsheet](http://jameschambers.co/writing/git-team-workflow-cheatsheet/).
 
 # GitHub
 
@@ -609,10 +606,12 @@ Se recomienda leer el [capítulo 6: GitHub][4], del libro [Pro Git][3] de Scott 
 * https://github.com/oslugr/curso-git
 * https://guides.github.com
 
-# Créditos
+## Créditos
 
 * La *Figura 1* es una imagen diseñada por [Oliver Steele](http://osteele.com).
 * La *Figura 2* es una imagen extraída del blog de [James Chambers](http://jameschambers.co/writing/git-team-workflow-cheatsheet/).
+
+Este material ha sido desarrollado por [José Juan Sánchez](http://josejuansanchez.org).
 
 ## Licencia
 
