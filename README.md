@@ -602,14 +602,17 @@ Se recomienda leer el [capítulo 6: GitHub][4], del libro [Pro Git][3] de Scott 
 
 ## Referencias
 
-* https://git-scm.com/book/es/v2
-* https://github.com/oslugr/curso-git
-* https://guides.github.com
+* [Pro Git](https://git-scm.com/book/es/v2). Scott Chacon, Ben Straub.
+* [Aprende Git](https://github.com/oslugr/curso-git). Juan Julián Merelo, Pablo Hinojosa.
+* [Git y GitHub. Guía de superviviencia](https://leanpub.com/gitygithub). Luis José Sánchez González.
+* [GitHub Guides](https://guides.github.com).
 
 ## Créditos
 
 * La *Figura 1* es una imagen diseñada por [Oliver Steele](http://osteele.com).
 * La *Figura 2* es una imagen extraída del blog de [James Chambers](http://jameschambers.co/writing/git-team-workflow-cheatsheet/).
+
+## Autor
 
 Este material ha sido desarrollado por [José Juan Sánchez](http://josejuansanchez.org).
 
