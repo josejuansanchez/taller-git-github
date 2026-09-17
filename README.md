@@ -10,10 +10,10 @@ En este taller de introducción a `git` y [GitHub][1] aprenderemos los comandos 
   1.5 [Cómo deshacer cambios](#cómo-deshacer-cambios)  
   1.6 [Borrando y moviendo/renombrando archivos](#borrando-y-moviendorenombrando-archivos)  
   1.7 [Cómo trabajar con un repositorio remoto](#cómo-trabajar-con-un-repositorio-remoto)  
-  1.8 [Branches](#branches)  
-  1.9 [Cómo trabajar en equipo con `git`](#cómo-trabajar-en-equipo-con-git)  
-  1.10 [El archivo `.gitignore`](#el-archivo-gitignore)  
-  1.11 [Consultar el historial de *commits*](#consultar-el-historial-de-commits)  
+  1.8 [El archivo `.gitignore`](#el-archivo-gitignore)  
+  1.9 [Consultar el historial de *commits*](#consultar-el-historial-de-commits)  
+  1.10 [Branches](#branches)  
+  1.11 [Cómo trabajar en equipo con `git`](#cómo-trabajar-en-equipo-con-git)  
 2. [GitHub](#github)  
   2.1 [Creación de un nuevo usuario](#crear-un-nuevo-usuario)  
   2.2 [Configuración de GitHub](#configuración-de-github)  
@@ -531,18 +531,6 @@ Tenga en cuenta que `git pull` es equivalente a realizar `git fetch` seguido de 
 
 ```
 
-## Branches
-
-Se recomienda leer el [capítulo 3: Ramificaciones en Git][2] del libro [Pro Git][3] de Scott Chacon y Ben Straub.
-
-## Cómo trabajar en equipo con `git`
-
-![](images/img-01.png)
-
-Figura 2: Imagen extraída del blog de [James Chambers](http://jameschambers.co/writing/git-team-workflow-cheatsheet/).
-
-Se recomienda leer el *post* [Using Git in a team: a cheatsheet](http://jameschambers.co/writing/git-team-workflow-cheatsheet/).
-
 ## El archivo `.gitignore`
 
 Dentro del directorio raíz de nuestro proyecto podemos tener un archivo especial llamado `.gitignore` donde indicamos los archivos o tipos de archivos que queremos que sean ignorados por `git`. 
@@ -573,6 +561,387 @@ La opción `--graph` muestra el historial de *branches* y *merges* con un sencil
 ```
 git log --graph
 ```
+
+## Branches
+
+Una rama (*branch*) en `git` es simplemente un puntero móvil que apunta a uno de los *commits* del repositorio. La rama por defecto en un repositorio suele llamarse `master` o `main` en los repositorios más recientes. 
+
+Cada vez que realizamos un *commit*, la rama en la que nos encontramos avanza automáticamente hacia el nuevo *commit*. Para saber en qué rama nos encontramos en cada momento, `git` utiliza un puntero especial llamado `HEAD`.
+
+```
+                  (HEAD -> main)
+                         |
+                         v
+[C1] -----> [C2] -----> [C3]
+```
+
+El uso de ramas permite aislar el desarrollo de nuevas funcionalidades, pruebas o corrección de errores sin alterar la línea de trabajo principal (*main*). Una vez completado y validado el trabajo en una rama, sus cambios pueden integrarse de nuevo en la rama principal.
+
+### Consultar las ramas existentes
+
+Para ver el listado de ramas que tenemos en nuestro repositorio local ejecutamos:
+
+```
+git branch
+```
+
+La salida del comando mostrará todas las ramas locales disponibles. La rama en la que nos encontramos actualmente aparecerá marcada con un asterisco (`*`) y habitualmente resaltada en color verde:
+
+```
+* main
+  otra-rama
+```
+
+Si queremos listar tanto las ramas locales como las ramas remotas, podemos añadir la opción `-a`:
+
+```
+git branch -a
+```
+
+Para ver el último *commit* de cada una de las ramas locales podemos utilizar la opción `-v`:
+
+```
+git branch -v
+```
+
+### Crear una nueva rama
+
+Para crear una nueva rama usamos el siguiente comando:
+
+```
+git branch <nombre_de_la_rama>
+```
+
+**Ejemplo:**
+
+Creamos una nueva rama llamada `nueva-funcionalidad`:
+
+```
+git branch nueva-funcionalidad
+```
+
+Es importante tener en cuenta que el comando anterior **únicamente crea la rama**, pero no nos cambia a ella. El puntero `HEAD` sigue apuntando a la rama en la que nos encontrábamos:
+
+```
+                     (nueva-funcionalidad)
+                         |
+                         v
+[C1] -----> [C2] -----> [C3]
+                         ^
+                         |
+                      (HEAD -> main)
+```
+
+### Cambiar de rama (*checkout*)
+
+Para cambiar de una rama a otra usamos el comando `git checkout`:
+
+```
+git checkout <nombre_de_la_rama>
+```
+
+**Nota**: En versiones recientes de `git` también se puede usar el comando `git switch <nombre_de_la_rama>` para cambiar de rama.
+
+**Ejemplo:**
+
+Cambiamos a la rama `nueva-funcionalidad` que acabamos de crear:
+
+```
+git checkout nueva-funcionalidad
+```
+
+Al ejecutar este comando, el puntero `HEAD` pasa a apuntar a la rama `nueva-funcionalidad` y el contenido de nuestro *workspace* se actualiza para reflejar el estado de dicha rama:
+
+```
+                       (HEAD -> nueva-funcionalidad)
+                         |
+                         v
+[C1] -----> [C2] -----> [C3]
+                         ^
+                         |
+                       (main)
+```
+
+Si ahora realizamos un nuevo *commit*, la rama `nueva-funcionalidad` avanzará con la nueva confirmación, mientras que `main` permanecerá en el *commit* anterior:
+
+```
+                                    (HEAD -> nueva-funcionalidad)
+                                     |
+                                     v
+[C1] -----> [C2] -----> [C3] -----> [C4]
+                         ^
+                         |
+                      (main)
+```
+
+### Crear y cambiar de rama en un solo paso
+
+Existe un atajo que nos permite crear una nueva rama y situarnos en ella en una sola instrucción:
+
+```
+git checkout -b <nombre_de_la_rama>
+```
+
+En las versiones recientes de `git`se puede ejecutar el comando:
+
+```
+git switch -c <nombre_de_la_rama>
+```
+
+**Ejemplo:**
+
+```
+git checkout -b correccion-bug
+```
+
+Este comando es equivalente a ejecutar `git branch correccion-bug` seguido de `git checkout correccion-bug`.
+
+### Fusionar ramas (*merge*)
+
+Una vez que hemos completado y probado el trabajo en una rama, el siguiente paso es integrar esos cambios en otra rama, que generalmente es la rama `main`. Para fusionar ramas usamos el comando `git merge`:
+
+```
+git merge <nombre_de_la_rama_a_fusionar>
+```
+
+Para realizar la fusión debemos seguir estos pasos:
+
+1. **Nos situamos en la rama destino que va a recibir los cambios**, por ejemplo `main`:
+   ```
+   git checkout main
+   ```
+2. Ejecutamos `git merge` indicando la rama con los cambios que queremos incorporar:
+   ```
+   git merge nueva-funcionalidad
+   ```
+
+A la hora de hacer un *merge* nos podemos encontrar con dos situaciones principales:
+
+#### 1. Fusión Fast-forward (avance rápido)
+
+Una fusión *Fast-forward* ocurre cuando la rama destino no ha recibido ningún cambio desde que se creó la rama que queremos fusionar. En este caso, `git` simplemente avanza el puntero de la rama destino hacia adelante para que apunte al último *commit* de la rama que queremos fusionar.
+
+**Estado antes de la fusión:**
+
+En este ejemplo la rama `main` se encuentra en el *commit* `C3`, creamos la nueva rama `nueva-funcionalidad` y realizamos un nuevo *commit* `C4`.
+
+```
+# Creamos una nueva rama y nos situamos en ella
+git checkout -b nueva-funcionalidad
+
+# Creamos un nuevo archivo 
+touch archivo.txt
+
+# Añadimos el archivo al área de preparación
+git add archivo.txt
+
+# Hacemos un commit en la rama nueva-funcionalidad
+git commit -m "Se añade una funcionalidad"
+```
+
+El estado de las ramas antes de la fusión es el siguiente:
+
+```
+                        (HEAD -> main)
+                         |
+                         v
+[C1] -----> [C2] -----> [C3] -----> [C4]
+                                     ^
+                                     |
+                                    (nueva-funcionalidad)
+```
+
+**Realizamos la fusión:**
+
+```
+# Nos situamos en la rama destino
+git checkout main
+
+# Realizamos la fusión de tipo fast-forward
+git merge nueva-funcionalidad
+```
+
+Al no existir bifurcación en el historial, `git` no necesita crear un nuevo *commit* de fusión. Simplemente **avanza el puntero de `main` hacia adelante (*fast-forward*)** hasta alcanzar `C4`.
+
+**Estado después de la fusión:**
+
+Ahora tanto `main` como `nueva-funcionalidad` apuntan al *commit* `C4`:
+
+```
+                                    (nueva-funcionalidad)
+                                     |
+                                     v
+[C1] -----> [C2] -----> [C3] -----> [C4]
+                                     ^
+                                     |
+                                    (HEAD -> main)
+```
+
+#### 2. Fusión a tres bandas (*Three-way merge*)
+
+Ocurre cuando ambas ramas han avanzado con *commits* independientes después de haberse bifurcado. En este caso no es posible hacer un avance rápido porque las historias han divergido.
+
+Antes de la fusión:
+
+```
+                        (HEAD -> main)
+                               |
+                               v
+                       +-----> [C5]
+                       |
+[C1] -----> [C2] ----->+
+                       |
+                       +-----> [C4]
+                               ^
+                               |
+                      (nueva-funcionalidad)
+```
+
+Para integrar los cambios, `git` realiza una fusión a tres bandas utilizando el ancestro común (`C2`) y los dos extremos de las ramas (`C5` y `C4`), creando automáticamente un nuevo *commit* de fusión (*merge commit*) que tiene dos padres.
+
+Ejecutamos la fusión desde `main`:
+
+```
+git checkout main
+git merge nueva-funcionalidad
+```
+
+Resultado tras la fusión:
+
+```
+                       +-----> [C5] -----+
+                       |                 |
+[C1] -----> [C2] ----->+                 +-----> [C6] (HEAD -> main)
+                       |                 |
+                       +-----> [C4] -----+
+                               ^
+                               |
+                      (nueva-funcionalidad)
+```
+
+### Resolución de conflictos
+
+Si en las dos ramas que estamos fusionando se ha modificado la **misma parte del mismo archivo**, `git` no podrá resolver automáticamente la fusión y se producirá un **conflicto**.
+
+En ese caso, `git` detendrá el proceso de fusión y mostrará un aviso como el siguiente:
+
+```
+Auto-merging index.html
+CONFLICT (content): Merge conflict in index.html
+Automatic merge failed; fix conflicts and then commit the result.
+```
+
+Si ejecutamos `git status`, veremos los archivos en conflicto marcados como no fusionados (*unmerged*):
+
+```
+git status
+```
+
+#### Pasos para resolver un conflicto
+
+1. **Abrir los archivos en conflicto:** Al abrir el archivo con un editor de texto, veremos que `git` ha insertado marcas especiales delimitando las zonas en conflicto:
+
+```
+<<<<<<< HEAD
+<h1>Título en la rama actual (main)</h1>
+=======
+<h1>Título en la rama que se fusiona (nueva-funcionalidad)</h1>
+>>>>>>> nueva-funcionalidad
+```
+
+* El contenido entre `<<<<<<< HEAD` y `=======` corresponde a la versión de la rama actual donde estamos situados (`main`).
+* El contenido entre `=======` y `>>>>>>> nueva-funcionalidad` corresponde a la versión de la rama que queremos integrar.
+
+2. **Editar el archivo manualmente:** Debemos decidir qué cambios mantener (o combinarlos) y eliminar las marcas añadidas por `git` (`<<<<<<<`, `=======`, `>>>>>>>`). Por ejemplo:
+
+```
+<h1>Título definitivo acordado</h1>
+```
+
+3. **Añadir el archivo resuelto a la *staging area*:**
+
+```
+git add index.html
+```
+
+4. **Completar el *commit* de fusión:**
+
+```
+git commit -m "Merge branch 'nueva-funcionalidad' resolviendo conflictos"
+```
+
+### Eliminar una rama
+
+Una vez que hemos fusionado una rama y ya no la necesitamos, podemos eliminarla para mantener limpio el repositorio.
+
+Para borrar una rama que ya ha sido fusionada ejecutamos:
+
+```
+git branch -d <nombre_de_la_rama>
+```
+
+**Ejemplo:**
+
+```
+git branch -d nueva-funcionalidad
+```
+
+Si intentamos borrar una rama que contiene cambios que todavía **no han sido fusionados**, `git` nos mostrará un mensaje de advertencia para evitar la pérdida accidental de trabajo. Si estamos completamente seguros de querer descartar esa rama y sus cambios, podemos forzar el borrado usando la opción `-D` (en mayúscula):
+
+```
+git branch -D <nombre_de_la_rama>
+```
+
+### Trabajar con ramas en un repositorio remoto
+
+#### Enviar una rama al repositorio remoto
+
+Para publicar una rama local en el repositorio remoto usamos el comando `git push` indicando el repositorio remoto (normalmente `origin` o el alias que hayamos configurado) y el nombre de la rama:
+
+```
+git push -u <alias_remoto> <nombre_de_la_rama>
+```
+
+La opción `-u` (o `--set-upstream`) asocia la rama local con la remota, de modo que en las siguientes ocasiones podremos sincronizarla usando simplemente `git push` o `git pull` mientras nos encontremos en esa rama.
+
+**Ejemplo:**
+
+```
+git push -u origin nueva-funcionalidad
+```
+
+#### Descargar una rama del repositorio remoto
+
+Si otro integrante del equipo ha creado una rama en el repositorio remoto y queremos trabajar en ella localmente, obtenemos las referencias del repositorio remoto y cambiamos a la rama:
+
+```
+git fetch origin
+git checkout <nombre_de_la_rama>
+```
+
+#### Eliminar una rama del repositorio remoto
+
+Para eliminar una rama que ya no es necesaria en el repositorio remoto podemos ejecutar:
+
+```
+git push <alias_remoto> --delete <nombre_de_la_rama>
+```
+
+**Ejemplo:**
+
+```
+git push origin --delete nueva-funcionalidad
+```
+
+Se recomienda leer el [capítulo 3: Ramificaciones en Git][2] del libro [Pro Git][3] de Scott Chacon y Ben Straub.
+
+## Cómo trabajar en equipo con `git`
+
+![](images/img-01.png)
+
+Figura 2: Imagen extraída del blog de [James Chambers](http://jameschambers.co/writing/git-team-workflow-cheatsheet/).
+
+Se recomienda leer el *post* [Using Git in a team: a cheatsheet](http://jameschambers.co/writing/git-team-workflow-cheatsheet/).
 
 # GitHub
 
