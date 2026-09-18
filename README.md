@@ -564,6 +564,10 @@ git log --graph
 
 ## Branches
 
+> [!NOTE]
+> Se recomienda leer el [capítulo 3: Ramificaciones en Git][2] del libro [Pro Git][3] de Scott Chacon y Ben Straub.
+
+
 Una rama (*branch*) en `git` es simplemente un puntero móvil que apunta a uno de los *commits* del repositorio. La rama por defecto en un repositorio suele llamarse `master` o `main` en los repositorios más recientes. 
 
 Cada vez que realizamos un *commit*, la rama en la que nos encontramos avanza automáticamente hacia el nuevo *commit*. Para saber en qué rama nos encontramos en cada momento, `git` utiliza un puntero especial llamado `HEAD`.
@@ -640,7 +644,7 @@ Para cambiar de una rama a otra usamos el comando `git checkout`:
 git checkout <nombre_de_la_rama>
 ```
 
-**Nota**: En versiones recientes de `git` también se puede usar el comando `git switch <nombre_de_la_rama>` para cambiar de rama.
+En las versiones recientes de `git` también se puede cambiar de rama con el comando `git switch <nombre_de_la_rama>`.
 
 **Ejemplo:**
 
@@ -682,7 +686,7 @@ Existe un atajo que nos permite crear una nueva rama y situarnos en ella en una 
 git checkout -b <nombre_de_la_rama>
 ```
 
-En las versiones recientes de `git`se puede ejecutar el comando:
+En las versiones recientes de `git`también se puede ejecutar el comando:
 
 ```
 git switch -c <nombre_de_la_rama>
@@ -698,7 +702,7 @@ Este comando es equivalente a ejecutar `git branch correccion-bug` seguido de `g
 
 ### Fusionar ramas (*merge*)
 
-Una vez que hemos completado y probado el trabajo en una rama, el siguiente paso es integrar esos cambios en otra rama, que generalmente es la rama `main`. Para fusionar ramas usamos el comando `git merge`:
+Una vez que hemos completado y probado el trabajo en una rama, el siguiente paso es integrar esos cambios en otra rama, que generalmente suele ser la rama `main`. Para fusionar ramas usamos el comando `git merge`:
 
 ```
 git merge <nombre_de_la_rama_a_fusionar>
@@ -706,7 +710,7 @@ git merge <nombre_de_la_rama_a_fusionar>
 
 Para realizar la fusión debemos seguir estos pasos:
 
-1. **Nos situamos en la rama destino que va a recibir los cambios**, por ejemplo `main`:
+1. **Nos situamos en la rama destino que va a recibir los cambios**, por ejemplo la rama `main`:
    ```
    git checkout main
    ```
@@ -779,9 +783,9 @@ Ahora tanto `main` como `nueva-funcionalidad` apuntan al *commit* `C4`:
 
 #### 2. Fusión a tres bandas (*Three-way merge*)
 
-Ocurre cuando ambas ramas han avanzado con *commits* independientes después de haberse bifurcado. En este caso no es posible hacer un avance rápido porque las historias han divergido.
+Ocurre cuando ambas ramas han avanzado con *commits* independientes después de haberse bifurcado. En este caso no es posible hacer un avance rápido (*fast-forward*) porque las historias han divergido.
 
-Antes de la fusión:
+Estado antes de la fusión:
 
 ```
                         (HEAD -> main)
@@ -797,7 +801,7 @@ Antes de la fusión:
                       (nueva-funcionalidad)
 ```
 
-Para integrar los cambios, `git` realiza una fusión a tres bandas utilizando el ancestro común (`C2`) y los dos extremos de las ramas (`C5` y `C4`), creando automáticamente un nuevo *commit* de fusión (*merge commit*) que tiene dos padres.
+Para integrar los cambios, `git` realiza una fusión a tres bandas utilizando el último *commit* común (`C2`) y los dos extremos de las ramas (`C5` y `C4`), creando automáticamente un nuevo *commit* de fusión (*merge commit*) que tiene dos padres.
 
 Ejecutamos la fusión desde `main`:
 
@@ -823,15 +827,9 @@ Resultado tras la fusión:
 
 Si en las dos ramas que estamos fusionando se ha modificado la **misma parte del mismo archivo**, `git` no podrá resolver automáticamente la fusión y se producirá un **conflicto**.
 
-En ese caso, `git` detendrá el proceso de fusión y mostrará un aviso como el siguiente:
+En ese caso, `git` detendrá el proceso de fusión y mostrará un aviso.
 
-```
-Auto-merging index.html
-CONFLICT (content): Merge conflict in index.html
-Automatic merge failed; fix conflicts and then commit the result.
-```
-
-Si ejecutamos `git status`, veremos los archivos en conflicto marcados como no fusionados (*unmerged*):
+Si ejecutamos `git status`, veremos los archivos en conflicto marcados como no fusionados:
 
 ```
 git status
@@ -861,7 +859,7 @@ git status
 3. **Añadir el archivo resuelto a la *staging area*:**
 
 ```
-git add index.html
+git add -A
 ```
 
 4. **Completar el *commit* de fusión:**
@@ -886,54 +884,11 @@ git branch -d <nombre_de_la_rama>
 git branch -d nueva-funcionalidad
 ```
 
-Si intentamos borrar una rama que contiene cambios que todavía **no han sido fusionados**, `git` nos mostrará un mensaje de advertencia para evitar la pérdida accidental de trabajo. Si estamos completamente seguros de querer descartar esa rama y sus cambios, podemos forzar el borrado usando la opción `-D` (en mayúscula):
+Si intentamos borrar una rama que contiene cambios que todavía **no han sido fusionados**, `git` nos mostrará un mensaje de advertencia para evitar la pérdida accidental de trabajo. Si estamos completamente seguros de querer descartar esa rama y sus cambios, podemos forzar el borrado usando la opción `-D`.
 
 ```
 git branch -D <nombre_de_la_rama>
 ```
-
-### Trabajar con ramas en un repositorio remoto
-
-#### Enviar una rama al repositorio remoto
-
-Para publicar una rama local en el repositorio remoto usamos el comando `git push` indicando el repositorio remoto (normalmente `origin` o el alias que hayamos configurado) y el nombre de la rama:
-
-```
-git push -u <alias_remoto> <nombre_de_la_rama>
-```
-
-La opción `-u` (o `--set-upstream`) asocia la rama local con la remota, de modo que en las siguientes ocasiones podremos sincronizarla usando simplemente `git push` o `git pull` mientras nos encontremos en esa rama.
-
-**Ejemplo:**
-
-```
-git push -u origin nueva-funcionalidad
-```
-
-#### Descargar una rama del repositorio remoto
-
-Si otro integrante del equipo ha creado una rama en el repositorio remoto y queremos trabajar en ella localmente, obtenemos las referencias del repositorio remoto y cambiamos a la rama:
-
-```
-git fetch origin
-git checkout <nombre_de_la_rama>
-```
-
-#### Eliminar una rama del repositorio remoto
-
-Para eliminar una rama que ya no es necesaria en el repositorio remoto podemos ejecutar:
-
-```
-git push <alias_remoto> --delete <nombre_de_la_rama>
-```
-
-**Ejemplo:**
-
-```
-git push origin --delete nueva-funcionalidad
-```
-
-Se recomienda leer el [capítulo 3: Ramificaciones en Git][2] del libro [Pro Git][3] de Scott Chacon y Ben Straub.
 
 ## Cómo trabajar en equipo con `git`
 
